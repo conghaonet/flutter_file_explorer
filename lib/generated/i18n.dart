@@ -21,6 +21,7 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get appTitle => "Hao File";
 }
 
 class $en extends S {
