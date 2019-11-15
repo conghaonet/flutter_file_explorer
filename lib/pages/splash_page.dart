@@ -13,7 +13,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SafeArea(
         child: Center(
           child: InkWell(
             onTap: () {
