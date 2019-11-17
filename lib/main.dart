@@ -32,8 +32,8 @@ class _MyAppState extends State<MyApp> {
 //      statusBarBrightness: Theme.of(context).primaryColorBrightness,
 ////      statusBarBrightness: ThemeData.estimateBrightnessForColor(Theme.of(context).primaryColor),
 //      statusBarIconBrightness: Theme.of(context).primaryColorBrightness == Brightness.dark ? Brightness.light : Brightness.dark,
-//      systemNavigationBarColor: Colors.green, //系统导航栏（虚拟按键）背景色
-//      systemNavigationBarIconBrightness: ThemeData.estimateBrightnessForColor(Theme.of(context).primaryColor) == Brightness.dark ? Brightness.light : Brightness.dark,
+      systemNavigationBarColor: ThemeData.dark().primaryColor, //系统导航栏（虚拟按键）背景色
+      systemNavigationBarIconBrightness: ThemeData.estimateBrightnessForColor(ThemeData.dark().primaryColor) == Brightness.dark ? Brightness.light : Brightness.dark,
 
     ) : SystemUiOverlayStyle.dark.copyWith();
   }
