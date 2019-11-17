@@ -1,5 +1,8 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_explorer/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   static const navigationName = '/home';
@@ -15,7 +18,14 @@ class _HomePageState extends State<HomePage> {
         title: Text('Home page'),
       ),
       body: Container(
-        child: Text('Home page'),
+        child: InkWell(
+          onTap: () {
+            Provider.of<ThemeProvider>(context).updateTheme(!Provider.of<ThemeProvider>(context).isDark);
+          },
+          child: Text(
+            'Home page',
+          ),
+        ),
       ),
     );
   }
