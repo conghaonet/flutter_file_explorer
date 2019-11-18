@@ -1,31 +1,16 @@
 import 'app_shared_preferences.dart';
 
 class SpUtil {
-  static String searchHistory = 'searchHistory';
-  static String userName = 'userName';
-  static String gitHubAuthorizationBasic = 'gitHubAuthorizationBasic';
-  static String gitHubAuthorizationToken = 'gitHubAuthorizationToken';
-  static String themeIndex = 'themeIndex';
-  static String language = 'language';
-  static String userEntity = 'userEntity';
+  static const String _darkMode = 'darkMode';
+  static const String _themeColorIndex = 'themeColorIndex';
+  static const String _accentColorIndex = 'accentColorIndex';
 
-  static List<String> getSearchHistory() => appSP.getStringList(searchHistory);
-  static Future<bool> setSearchHistory(List<String> value) => appSP.setStringList(searchHistory, value);
-  static Future<bool> removeSearchHistory() => appSP.remove(searchHistory);
+  static bool isDarkMode() => appSP.getBool(_darkMode) ?? false;
+  static Future<bool> setDarkMode(bool isDark) => appSP.setBool(_darkMode, isDark);
 
-  static String getUserName() => appSP.getString(userName);
-  static Future<bool> setUserName(String value) => appSP.setString(userName, value);
+  static int getThemeColorIndex() => appSP.getInt(_themeColorIndex) ?? -1;
+  static Future<bool> setThemeColorIndex(int colorIndex) => appSP.setInt(_themeColorIndex, colorIndex);
 
-  static String getGitHubAuthorizationBasic() => appSP.getString(gitHubAuthorizationBasic);
-  static Future<bool> setGitHubAuthorizationBasic(String value) => appSP.setString(gitHubAuthorizationBasic, value);
-
-  static String getGitHubAuthorizationToken() => appSP.getString(gitHubAuthorizationToken);
-  static Future<bool> setGitHubAuthorizationToken(String value) => appSP.setString(gitHubAuthorizationToken, value);
-
-  static int getThemeIndex() => appSP.getInt(themeIndex);
-  static Future<bool> setThemeIndex(int value) => appSP.setInt(themeIndex, value);
-
-  static String getLanguage() => appSP.getString(language);
-  static Future<bool> setLanguage(String value) => appSP.setString(language, value);
-
+  static int getAccentColorIndex() => appSP.getInt(_accentColorIndex) ?? -1;
+  static Future<bool> setAccentColorIndex(int colorIndex) => appSP.setInt(_accentColorIndex, colorIndex);
 }

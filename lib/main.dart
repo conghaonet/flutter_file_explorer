@@ -4,6 +4,7 @@ import 'package:flutter_file_explorer/navigation/app_navigator.dart';
 import 'package:flutter_file_explorer/pages/splash_page.dart';
 import 'package:flutter_file_explorer/providers/theme_provider.dart';
 import 'package:flutter_file_explorer/utils/app_shared_preferences.dart';
+import 'package:flutter_file_explorer/utils/theme_util.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +68,9 @@ class _MyAppState extends State<MyApp> {
 //            localeResolutionCallback: S.delegate.resolution(fallback: const Locale('en','')),
               title: 'File Explorer',
               onGenerateTitle: (context) => S.current.appTitle,
-              theme: Provider.of<ThemeProvider>(context).isDark ? ThemeData.dark() : ThemeData.light(),
+              theme: ThemeUtil.getLightTheme(context),
+              darkTheme: ThemeUtil.getDarkTheme(context),
+              themeMode: Provider.of<ThemeProvider>(context).isDark ? ThemeMode.system : ThemeMode.system,
               home: SplashPage(),
             ),
           );

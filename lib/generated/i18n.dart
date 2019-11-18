@@ -21,7 +21,14 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get accentColor => "强调色";
   String get appTitle => "Hao Files";
+  String get darkMode => "深色模式";
+  String get lightMode => "浅色模式";
+  String get settings => "设置";
+  String get theme => "主题";
+  String get themeColor => "主题色";
+  String get themeMode => "主题模式";
 }
 
 class $en extends S {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/pages/navigation_error_page.dart';
+import 'package:flutter_file_explorer/pages/settings_page.dart';
 import 'package:flutter_file_explorer/pages/splash_page.dart';
 
 class AppNavigator extends NavigatorObserver {
@@ -12,6 +13,7 @@ class AppNavigator extends NavigatorObserver {
   static final Map<String, WidgetBuilder> _routes = {
     SplashPage.navigationName: (_) => SplashPage(),
     HomePage.navigationName: (_) => HomePage(),
+    SettingsPage.navigationName: (_) => SettingsPage(),
   };
   Map<String, WidgetBuilder> get routes => _routes;
 
