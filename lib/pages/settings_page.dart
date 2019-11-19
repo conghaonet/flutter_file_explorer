@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/providers/theme_provider.dart';
 import 'package:flutter_file_explorer/resources/app_const.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
+import 'package:flutter_file_explorer/utils/theme_util.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -24,6 +26,19 @@ class _SettingsPageState extends State<SettingsPage> {
       default:
         return S.current.lightMode;
     }
+  }
+
+  Future _changeThemeMode(ThemeMode mode) async {
+    await Provider.of<ThemeProvider>(context).setThemeMode(mode);
+    SystemChrome.setSystemUIOverlayStyle(ThemeUtil.getSystemUiOverlayStyle(context));
+    Navigator.pop(context);
+    return Future;
+  }
+
+  Future _changeThemeColor(int themeColorIndex) async {
+    await Provider.of<ThemeProvider>(context).setThemeColorIndex(themeColorIndex);
+    SystemChrome.setSystemUIOverlayStyle(ThemeUtil.getSystemUiOverlayStyle(context));
+    return Future;
   }
 
   @override
@@ -64,33 +79,24 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text(S.current.systemMode),
               value: ThemeMode.system,
               groupValue: SpUtil.getThemeMode(),
-              onChanged: (ThemeMode mode) {
-                if(mode != SpUtil.getThemeMode()) {
-                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
-                }
-                Navigator.pop(context);
+              onChanged: (ThemeMode mode) async {
+                await _changeThemeMode(mode);
               },
             ),
             RadioListTile(
               title: Text(S.current.lightMode),
               value: ThemeMode.light,
               groupValue: SpUtil.getThemeMode(),
-              onChanged: (ThemeMode mode) {
-                if(mode != SpUtil.getThemeMode()) {
-                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
-                }
-                Navigator.pop(context);
+              onChanged: (ThemeMode mode) async {
+                await _changeThemeMode(mode);
               },
             ),
             RadioListTile(
               title: Text(S.current.darkMode),
               value: ThemeMode.dark,
               groupValue: SpUtil.getThemeMode(),
-              onChanged: (ThemeMode mode) {
-                if(mode != SpUtil.getThemeMode()) {
-                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
-                }
-                Navigator.pop(context);
+              onChanged: (ThemeMode mode) async {
+                await _changeThemeMode(mode);
               },
             ),
           ],
@@ -103,10 +109,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final List<Widget> themeChildren = [];
     for(int i=0; i<AppConst.themeColors.length; i++) {
       themeChildren.add(InkWell(
-        onTap: () {
-          setState(() {
-            Provider.of<ThemeProvider>(context).setThemeColorIndex(i);
-          });
+        onTap: () async {
+          await _changeThemeColor(i);
         },
         child: Container(
           width: 60,

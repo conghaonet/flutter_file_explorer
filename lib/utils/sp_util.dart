@@ -3,17 +3,9 @@ import 'package:flutter/material.dart';
 import 'app_shared_preferences.dart';
 
 class SpUtil {
-  @Deprecated('Use `_themeMode` instead.')
-  static const String _darkMode = 'darkMode';
-
   static const String _themeMode = 'themeMode';
   static const String _themeColorIndex = 'themeColorIndex';
   static const String _accentColorIndex = 'accentColorIndex';
-
-  @Deprecated('Use `getThemeMode()` instead.')
-  static bool isDarkMode() => appSP.getBool(_darkMode) ?? false;
-  @Deprecated('Use `setThemeMode(ThemeMode)` instead.')
-  static Future<bool> setDarkMode(bool isDark) => appSP.setBool(_darkMode, isDark);
 
   static ThemeMode getThemeMode() {
     int modeIndex = appSP.getInt(_themeMode);
