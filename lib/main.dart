@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
               onGenerateTitle: (context) => S.current.appTitle,
               theme: ThemeUtil.getLightTheme(context),
               darkTheme: ThemeUtil.getDarkTheme(context),
-              themeMode: Provider.of<ThemeProvider>(context).isDark ? ThemeMode.system : ThemeMode.system,
+              themeMode: Provider.of<ThemeProvider>(context).themeMode,
               home: SplashPage(),
             ),
           );

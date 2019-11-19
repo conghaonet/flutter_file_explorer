@@ -3,6 +3,7 @@
   "settings": "设置",
   "theme": "主题",
   "themeMode": "主题模式",
+  "systemMode": "系统跟随",
   "lightMode": "浅色模式",
   "darkMode": "深色模式",
   "themeColor": "主题色",

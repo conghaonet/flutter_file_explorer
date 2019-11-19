@@ -15,6 +15,17 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   static final Border _currentThemeBorder = Border.all(width: 2.0, color: Color(0x66000000));
 
+  String _getThemeModeString() {
+    switch(SpUtil.getThemeMode()) {
+      case ThemeMode.system:
+        return S.current.systemMode;
+      case ThemeMode.dark:
+        return S.current.darkMode;
+      default:
+        return S.current.lightMode;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,23 +38,65 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: Icon(Icons.palette),
               title: Text(S.current.themeMode,),
-              subtitle: SpUtil.isDarkMode() ? Text(S.current.darkMode) : Text(S.current.lightMode),
-              trailing: Switch(
-                activeColor: Theme.of(context).accentColor,
-                value: SpUtil.isDarkMode(),
-                onChanged: (bool value){
-                  Provider.of<ThemeProvider>(context).setThemeIsDarkMode(value);
-                },
-              ),
+              subtitle: Text(_getThemeModeString()),
+              onTap: () {
+                _showChangeThemeMode();
+              },
             ),
             //深色主题时，不允许设置主题色
-//            if(ThemeData.dark().primaryColor != Theme.of(context).primaryColor) _chooseThemeColor(),
-            if(MediaQuery.of(context).platformBrightness != Brightness.dark && !SpUtil.isDarkMode()) _chooseThemeColor(),
+            if(SpUtil.getThemeMode() == ThemeMode.light
+                || (SpUtil.getThemeMode() == ThemeMode.system
+                    && MediaQuery.of(context).platformBrightness == Brightness.light)) _chooseThemeColor(),
             _chooseAccentColor(),
           ],
         ),
       ),
     );
+  }
+
+  void _showChangeThemeMode() {
+    showDialog<void>(context: context, barrierDismissible: true, builder: (BuildContext context) {
+      return AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            RadioListTile(
+              title: Text(S.current.systemMode),
+              value: ThemeMode.system,
+              groupValue: SpUtil.getThemeMode(),
+              onChanged: (ThemeMode mode) {
+                if(mode != SpUtil.getThemeMode()) {
+                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile(
+              title: Text(S.current.lightMode),
+              value: ThemeMode.light,
+              groupValue: SpUtil.getThemeMode(),
+              onChanged: (ThemeMode mode) {
+                if(mode != SpUtil.getThemeMode()) {
+                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile(
+              title: Text(S.current.darkMode),
+              value: ThemeMode.dark,
+              groupValue: SpUtil.getThemeMode(),
+              onChanged: (ThemeMode mode) {
+                if(mode != SpUtil.getThemeMode()) {
+                  Provider.of<ThemeProvider>(context).setThemeMode(mode);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   ExpansionTile _chooseThemeColor() {
@@ -74,6 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ],
     );
   }
+
   ExpansionTile _chooseAccentColor() {
     final List<Widget> themeChildren = [];
     for(int i=0; i<AppConst.accentColors.length; i++) {

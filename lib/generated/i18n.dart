@@ -26,6 +26,7 @@ class S implements WidgetsLocalizations {
   String get darkMode => "深色模式";
   String get lightMode => "浅色模式";
   String get settings => "设置";
+  String get systemMode => "系统跟随";
   String get theme => "主题";
   String get themeColor => "主题色";
   String get themeMode => "主题模式";
