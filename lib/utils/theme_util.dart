@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_explorer/resources/app_const.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class ThemeUtil {
   static ThemeData getLightTheme(BuildContext context) {
@@ -24,6 +25,7 @@ class ThemeUtil {
     if((SpUtil.getThemeMode() == ThemeMode.light)
         || (SpUtil.getThemeMode() == ThemeMode.system
             && MediaQuery.of(context).platformBrightness == Brightness.light)) {
+      FlutterStatusbarcolor.setStatusBarColor(Theme.of(context).primaryColor);
       return SystemUiOverlayStyle(
         statusBarColor: SpUtil.getThemeColorIndex() != -1 ? AppConst.themeColors[SpUtil.getThemeColorIndex()] : Theme.of(context).primaryColor,
         statusBarBrightness: Theme.of(context).primaryColorBrightness,
