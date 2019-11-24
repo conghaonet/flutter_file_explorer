@@ -5,6 +5,8 @@ import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
 import 'package:flutter_file_explorer/utils/theme_util.dart';
+import 'package:flutter_file_explorer/widgets/clock.dart';
+import 'package:flutter_file_explorer/widgets/clock_painter.dart';
 
 class SplashPage extends StatefulWidget {
   static const navigationName = '/splash';
@@ -22,19 +24,37 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     //修改主题后，需要在app的第一个页面设置状态栏。
     SystemChrome.setSystemUIOverlayStyle(ThemeUtil.getSystemUiOverlayStyle(context));
-//    FlutterStatusbarcolor.setStatusBarColor(Theme.of(context).primaryColor);
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: InkWell(
-            onTap: () {
-              SpUtil.getThemeMode();
-              Navigator.pushNamed(context, HomePage.navigationName);
-            },
-            child: Text(
-              S.current.appTitle,
+        child: Column(
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                SpUtil.getThemeMode();
+                Navigator.pushReplacementNamed(context, HomePage.navigationName);
+              },
+              child: Text(
+                S.current.appTitle,
+              ),
             ),
-          ),
+            Container(
+              width: double.infinity,
+              height: 300,
+              color: Colors.grey,
+              child: CustomPaint(
+                painter: ClockPainter(DateTime.now()),
+                size: Size(200.0, 200.0),
+              ),
+            ),
+            CustomPaint(
+              painter: ClockPainter2(DateTime.now(),
+                  numberColor: Colors.black,
+                  handColor: Colors.black,
+                  borderColor: Colors.black,
+                  radius: 150),
+              size: Size(150.0 * 2, 150.0 * 2),
+            ),
+          ],
         ),
       ),
     );
