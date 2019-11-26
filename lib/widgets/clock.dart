@@ -116,14 +116,9 @@ class ClockPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ClockPainter oldDelegate) {
-    if((this.datetime.second != oldDelegate.datetime.second)
-        || (this.datetime.minute != oldDelegate.datetime.minute)
-      || (this.datetime.hour != oldDelegate.datetime.hour)) {
-//      this.datetime = now;
-      return true;
-    } else {
-      return false;
-    }
+    return (this.datetime.second != oldDelegate.datetime.second
+        || this.datetime.minute != oldDelegate.datetime.minute
+        || this.datetime.hour != oldDelegate.datetime.hour);
   }
 
   static double getRadians(double angle) {

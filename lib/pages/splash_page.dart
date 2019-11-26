@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +17,15 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  Timer _timer;
   @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      setState(() {
+
+      });
+    });
   }
 
   @override
@@ -63,5 +71,10 @@ class _SplashPageState extends State<SplashPage> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
