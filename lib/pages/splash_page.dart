@@ -39,11 +39,16 @@ class _SplashPageState extends State<SplashPage> {
             ),
             Container(
               width: double.infinity,
-              height: 300,
+              height: 350,
               color: Colors.grey,
               child: CustomPaint(
                 painter: ClockPainter(DateTime.now()),
-                size: Size(200.0, 200.0),
+//                child: Container(
+//                  width: 350,
+//                  height: 350,
+//                  child: Text('Clock'),
+//                ),
+//                size: Size(200.0, 200.0),
               ),
             ),
             CustomPaint(

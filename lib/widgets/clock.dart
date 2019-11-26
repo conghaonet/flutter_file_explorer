@@ -17,7 +17,7 @@ class _ClockState extends State<Clock> {
 }
 
 class ClockPainter extends CustomPainter {
-  final DateTime datetime;
+  DateTime datetime;
   TextPainter textPainter;
   final double borderWidth = 4;
   final TextPainter hourTextPainter = TextPainter(
@@ -29,6 +29,7 @@ class ClockPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    datetime = DateTime.now();
     final _radius = min(size.width, size.height) / 2;
 
     canvas.translate(size.width /2, size.height /2);
@@ -42,18 +43,18 @@ class ClockPainter extends CustomPainter {
     List<Offset> _hourPoints = [];
 
     final _numberRadius = _radius - borderWidth * 8;
+    final _hourHandRadius = _numberRadius - borderWidth * 12;
 
-    _secondPoints.add(Offset(0, 0));
+//    _secondPoints.add(Offset(0, 0));
     for (var i = 0; i < 60; i++) {
-      int _angle = i * 6;
-      double _radians =  _angle * pi / 180;
+      double _angle = i * 6.0;
       if(i % 5 !=0) {
-        double x = cos(_radians) * _secondRadius;
-        double y = sin(_radians) * _secondRadius;
+        double x = cos(getRadians(_angle)) * _secondRadius;
+        double y = sin(getRadians(_angle)) * _secondRadius;
         _secondPoints.add(Offset(x, y));
       } else {
-        double x = cos(_radians) * _secondRadius;
-        double y = sin(_radians) * _secondRadius;
+        double x = cos(getRadians(_angle)) * _secondRadius;
+        double y = sin(getRadians(_angle)) * _secondRadius;
         _hourPoints.add(Offset(x, y));
       }
     }
@@ -63,12 +64,11 @@ class ClockPainter extends CustomPainter {
     Paint hourPaint = Paint()..color=Colors.white..strokeWidth=8..strokeCap=StrokeCap.round;
     canvas.drawPoints(PointMode.points, _hourPoints, hourPaint);
     for (var i = 0; i < 60; i++) {
-      int _angle = i * 6;
-      double _radians =  _angle * pi / 180;
+      double _angle = i * 6.0;
       if(i % 5 ==0) {
         canvas.save();
-        double hourNumberX = cos(_radians) * _numberRadius;
-        double hourNumberY = sin(_radians) * _numberRadius;
+        double hourNumberX = cos(getRadians(_angle)) * _numberRadius;
+        double hourNumberY = sin(getRadians(_angle)) * _numberRadius;
         canvas.translate(hourNumberX, hourNumberY);
         int intHour = (i ~/ 5) + 3;
         if(intHour > 12) intHour = intHour - 12;
@@ -79,23 +79,54 @@ class ClockPainter extends CustomPainter {
         canvas.restore();
       }
     }
-    final hour = datetime.hour;
-    // draw hour hand
-//    Offset hourHand1 = Offset(
-//        radius - cos(degToRad(360 / 12 * hour - 90)) * (radius * 0.2),
-//        radius - sin(degToRad(360 / 12 * hour - 90)) * (radius * 0.2));
-//    Offset hourHand2 = Offset(
-//        radius + cos(degToRad(360 / 12 * hour - 90)) * (radius * 0.5),
-//        radius + sin(degToRad(360 / 12 * hour - 90)) * (radius * 0.5));
+    _paintHourHand(canvas, _hourHandRadius);
+    _paintMinuteHand(canvas, _hourHandRadius+20);
+    _paintSecondHand(canvas, _hourHandRadius+20);
+
+    canvas.drawPoints(PointMode.points, [Offset(0, 0)], Paint()..strokeWidth=12..strokeCap=StrokeCap.round..color=Colors.yellow);
+    canvas.drawPoints(PointMode.points, [Offset(0, 0)], Paint()..strokeWidth=8..strokeCap=StrokeCap.round);
+  }
+
+  _paintHourHand(Canvas canvas, double radius) {
+    double hourAngle = datetime.hour % 12 + datetime.minute / 60.0 - 3;
+//    if(hourAngle > 12) hourAngle = hourAngle - 12;
+    Offset handOffset = Offset(cos(getRadians(hourAngle * 30)) * radius, sin(getRadians(hourAngle * 30)) * radius);
     final hourHandPaint = Paint()
       ..color = Colors.blue
       ..strokeWidth = 8;
-//    canvas.drawLine(hourHand1, hourHand2, hourPaint);
-    canvas.drawLine(Offset(0, 0), Offset(0, 50), hourHandPaint);
+    canvas.drawLine(Offset(0, 0), handOffset, hourHandPaint);
+
+  }
+  _paintMinuteHand(Canvas canvas, double radius) {
+    double hourAngle = datetime.minute - 15.0;
+    Offset handOffset = Offset(cos(getRadians(hourAngle * 6.0)) * radius, sin(getRadians(hourAngle * 6.0)) * radius);
+    final hourHandPaint = Paint()
+      ..color = Colors.green
+      ..strokeWidth = 8;
+    canvas.drawLine(Offset(0, 0), handOffset, hourHandPaint);
+  }
+  _paintSecondHand(Canvas canvas, double radius) {
+    double hourAngle = datetime.second - 15.0;
+    Offset handOffset = Offset(cos(getRadians(hourAngle * 6.0)) * radius, sin(getRadians(hourAngle * 6.0)) * radius);
+    final hourHandPaint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 4;
+    canvas.drawLine(Offset(0, 0), handOffset, hourHandPaint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(ClockPainter oldDelegate) {
+    if((this.datetime.second != oldDelegate.datetime.second)
+        || (this.datetime.minute != oldDelegate.datetime.minute)
+      || (this.datetime.hour != oldDelegate.datetime.hour)) {
+//      this.datetime = now;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static double getRadians(double angle) {
+    return angle * pi / 180;
   }
 }
