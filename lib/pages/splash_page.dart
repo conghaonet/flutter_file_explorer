@@ -17,6 +17,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final List<String> hourNumbers = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+//  final List<String> hourNumbers = ['', '', '3', '', '', '6', '', '', '9', '', '', '12'];
   Timer _timer;
   @override
   void initState() {
@@ -46,16 +48,35 @@ class _SplashPageState extends State<SplashPage> {
             ),
             Container(
               width: double.infinity,
-              height: 200,
+              height: 250,
               color: Colors.grey,
-              child: CustomPaint(
-                painter: ClockPainter(DateTime.now()),
+              child: Padding(
+                padding: EdgeInsets.zero,
+                child: CustomPaint(
+                  painter: ClockPainter(
+                    DateTime.now(),
+                    dialPlateColor: Colors.white,
+                    hourHandColor: Colors.blue[900],
+                    minuteHandColor: Colors.purple[900],
+                    secondHandColor: Colors.red[900],
+                    numberColor: Colors.red[900],
+                    borderColor: Colors.yellow[900],
+                    minutePointColor: Colors.purple[900],
+                    centerPointColor: Colors.green[900],
+//                    showBorder: false,
+//                    showTicks: false,
+//                    showMinuteHand: false,
+//                    showSecondHand: false,
+//                    showNumber: false,
+//                    hourNumbers: hourNumbers,
+                  ),
 //                child: Container(
 //                  width: 350,
 //                  height: 350,
 //                  child: Text('Clock'),
 //                ),
 //                size: Size(200.0, 200.0),
+                ),
               ),
             ),
             CustomPaint(
