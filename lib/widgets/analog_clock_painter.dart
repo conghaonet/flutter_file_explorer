@@ -16,7 +16,7 @@ class _ClockState extends State<Clock> {
   }
 }
 
-class ClockPainter extends CustomPainter {
+class AnalogClockPainter extends CustomPainter {
   static const List<String> defaultHourNumbers = ['1','2','3','4','5','6','7','8','9','10','11','12'];
   final DateTime _datetime;
   final Color dialPlateColor;
@@ -39,7 +39,7 @@ class ClockPainter extends CustomPainter {
     textDirection: TextDirection.ltr,
   );
 
-  ClockPainter(this._datetime,
+  AnalogClockPainter(this._datetime,
       {this.dialPlateColor = Colors.transparent,
         this.hourHandColor = Colors.black,
         this.minuteHandColor = Colors.black,
@@ -181,7 +181,7 @@ class ClockPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(ClockPainter oldDelegate) {
+  bool shouldRepaint(AnalogClockPainter oldDelegate) {
     return _datetime != oldDelegate._datetime
         || dialPlateColor != oldDelegate.dialPlateColor
         || hourHandColor != oldDelegate.hourHandColor

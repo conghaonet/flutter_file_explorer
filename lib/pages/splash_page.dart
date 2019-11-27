@@ -7,8 +7,8 @@ import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
 import 'package:flutter_file_explorer/utils/theme_util.dart';
-import 'package:flutter_file_explorer/widgets/clock.dart';
-import 'package:flutter_file_explorer/widgets/clock_painter.dart';
+import 'package:flutter_file_explorer/widgets/analog_clock.dart';
+import 'package:flutter_file_explorer/widgets/analog_clock_painter.dart';
 
 class SplashPage extends StatefulWidget {
   static const navigationName = '/splash';
@@ -20,6 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   final List<String> hourNumbers = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 //  final List<String> hourNumbers = ['', '', '3', '', '', '6', '', '', '9', '', '', '12'];
   Timer _timer;
+  DateTime _dateTime = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,7 @@ class _SplashPageState extends State<SplashPage> {
               child: Padding(
                 padding: EdgeInsets.zero,
                 child: CustomPaint(
-                  painter: ClockPainter(
+                  painter: AnalogClockPainter(
                     DateTime.now(),
                     dialPlateColor: Colors.white,
                     borderColor: Colors.blue,
@@ -81,16 +82,42 @@ class _SplashPageState extends State<SplashPage> {
               ),
             ),
             Container(
-              color: Colors.blue[200],
-              child: CustomPaint(
-                painter: ClockPainter2(DateTime.now(),
-                    numberColor: Colors.black,
-                    handColor: Colors.black,
-                    borderColor: Colors.black,
-                    radius: 150),
-                size: Size(150.0 * 2, 150.0 * 2),
+//              color: Colors.blue[200],
+//              width: 300,
+//              height: 200,
+              child: AnalogClock(
+                width: 200,
+                height: 200,
+                dateTime: DateTime(2019, 1, 1, 18, 22, 45),
+                isLive: true,
+                dialPlateColor: Colors.white,
+                borderColor: Colors.blue,
+                hourHandColor: Colors.blue[900],
+                minuteHandColor: Colors.purple[900],
+                secondHandColor: Colors.red[900],
+                tickColor: Colors.purple[900],
+                numberColor: Colors.red[900],
+                centerPointColor: Colors.green[900],
+//                    showBorder: false,
+//                    showTicks: false,
+//                    showMinuteHand: false,
+//                    showSecondHand: false,
+//                    showNumber: false,
+//                    hourNumbers: hourNumbers,
+//                    borderWidth: 50,
               ),
             ),
+//            Container(
+//              color: Colors.blue[200],
+//              child: CustomPaint(
+//                painter: ClockPainter2(DateTime.now(),
+//                    numberColor: Colors.black,
+//                    handColor: Colors.black,
+//                    borderColor: Colors.black,
+//                    radius: 150),
+//                size: Size(150.0 * 2, 150.0 * 2),
+//              ),
+//            ),
           ],
         ),
       ),
