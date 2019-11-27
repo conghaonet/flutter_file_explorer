@@ -23,7 +23,6 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       setState(() {
-
       });
     });
   }
@@ -47,7 +46,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
             Container(
               width: double.infinity,
-              height: 350,
+              height: 200,
               color: Colors.grey,
               child: CustomPaint(
                 painter: ClockPainter(DateTime.now()),
