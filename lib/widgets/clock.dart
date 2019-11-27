@@ -25,7 +25,7 @@ class ClockPainter extends CustomPainter {
   final Color secondHandColor;
   final Color numberColor;
   final Color borderColor;
-  final Color minutePointColor;
+  final Color tickColor;
   final Color centerPointColor;
   final List<String> hourNumbers;
   final bool showBorder;
@@ -33,6 +33,7 @@ class ClockPainter extends CustomPainter {
   final bool showMinuteHand;
   final bool showSecondHand;
   final bool showNumber;
+  double _borderWidth;
   final TextPainter _hourTextPainter = TextPainter(
     textAlign: TextAlign.center,
     textDirection: TextDirection.ltr,
@@ -43,9 +44,9 @@ class ClockPainter extends CustomPainter {
         this.hourHandColor = Colors.black,
         this.minuteHandColor = Colors.black,
         this.secondHandColor = Colors.black,
+        this.tickColor = Colors.black,
         this.numberColor = Colors.black,
         this.borderColor = Colors.black,
-        this.minutePointColor = Colors.black,
         this.centerPointColor = Colors.black,
         this.showBorder = true,
         this.showTicks = true,
@@ -53,75 +54,87 @@ class ClockPainter extends CustomPainter {
         this.showSecondHand = true,
         this.showNumber = true,
         this.hourNumbers = defaultHourNumbers,
-      }) : assert(hourNumbers == null || hourNumbers.length==12);
+        double borderWidth,
+      }) : assert(hourNumbers == null || hourNumbers.length==12),
+        _borderWidth = borderWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
     //clock radius
     final radius = min(size.width, size.height) / 2;
     //clock circumference
-    final double circumference = 2 * radius * pi;
-    final double borderWidth = showBorder ? radius / 20.0 : 0.0;
+    final double borderWidth = showBorder ? (_borderWidth ?? radius/20.0) : 0.0;
+    final double circumference = 2 * (radius - borderWidth) * pi;
 
-    canvas.translate(size.width /2, size.height /2);
+    canvas.translate(size.width/2, size.height/2);
 
     canvas.drawCircle(Offset(0,0), radius, Paint()..style=PaintingStyle.fill..color=dialPlateColor);
 
     // border style
-    if(showBorder) {
+    if(showBorder && borderWidth > 0) {
       Paint borderPaint = Paint()
         ..color = this.borderColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = borderWidth
         ..isAntiAlias = true;
-      canvas.drawCircle(Offset(0,0), radius, borderPaint);
+      canvas.drawCircle(Offset(0,0), radius - borderWidth/2, borderPaint);
     }
 
-    // setup minute point
-    final double minutePointWidth = circumference / 200;
-    final double minuteBigPointWidth = circumference / 120;
-    final double minutePointRadius = (radius - borderWidth - minuteBigPointWidth);
-    if(showTicks) _paintMinutePoints(canvas, minutePointRadius, minutePointWidth, minuteBigPointWidth);
+    // setup tick
+    final double tickWidth = circumference / 200;
+    final double bigTickWidth = circumference / 120;
+    final double tickRadius = (radius - borderWidth - bigTickWidth);
+    if(showTicks) _paintTicks(canvas, tickRadius, tickWidth, bigTickWidth);
 
     // setup numbers
-    final double numberRadius = minutePointRadius - minuteBigPointWidth * 2.5;
-    double hourTextHeight = radius / 50 * 8;
+    final double numberRadius = tickRadius - bigTickWidth * 3;
+    double hourTextHeight = (radius - borderWidth) / 40 * 8;
+
     if(showNumber) {
       hourTextHeight = _paintHourText(canvas, numberRadius, hourTextHeight);
     }
 
-    _paintHourHand(canvas, numberRadius - hourTextHeight, radius / 20);
-    if(showMinuteHand) _paintMinuteHand(canvas, numberRadius, radius / 40);
-    if(showSecondHand) _paintSecondHand(canvas, numberRadius + hourTextHeight / 2, radius / 80);
+    _paintHourHand(canvas, numberRadius - hourTextHeight, (radius - borderWidth)/20);
+
+    if(showMinuteHand) {
+      _paintMinuteHand(canvas, numberRadius, (radius - borderWidth) / 40);
+    }
+    if(showSecondHand) {
+      _paintSecondHand(canvas, numberRadius + hourTextHeight / 2, (radius - borderWidth) / 80);
+    }
 
     //draw center point
-    canvas.drawPoints(PointMode.points, [Offset(0, 0)], Paint()..strokeWidth=(radius / 10)..strokeCap=StrokeCap.round..color=this.centerPointColor);
-//    canvas.drawPoints(PointMode.points, [Offset(0, 0)], Paint()..strokeWidth=(radius / 15)..strokeCap=StrokeCap.round);
+    Paint centerPointPaint = Paint()
+      ..strokeWidth=((radius - borderWidth)/10)
+      ..strokeCap=StrokeCap.round
+      ..color=this.centerPointColor;
+    canvas.drawPoints(PointMode.points, [Offset(0, 0)], centerPointPaint);
   }
 
-  /// 绘制分钟圆点
-  void _paintMinutePoints(Canvas canvas, double radius, double pointWidth, double bigPointWidth) {
-    List<Offset> _minutePoints = [];
-    List<Offset> _minuteBigPoints = [];
+  /// draw ticks
+  void _paintTicks(Canvas canvas, double radius, double tickWidth, double bigTickWidth) {
+    List<Offset> ticks = [];
+    List<Offset> bigTicks = [];
     for (var i = 0; i < 60; i++) {
       double _angle = i * 6.0;
       if(i % 5 !=0) {
         double x = cos(getRadians(_angle)) * radius;
         double y = sin(getRadians(_angle)) * radius;
-        _minutePoints.add(Offset(x, y));
+        ticks.add(Offset(x, y));
       } else {
         double x = cos(getRadians(_angle)) * radius;
         double y = sin(getRadians(_angle)) * radius;
-        _minuteBigPoints.add(Offset(x, y));
+        bigTicks.add(Offset(x, y));
       }
     }
-    Paint minutePointPaint = Paint()..color=this.minutePointColor..strokeWidth=pointWidth..strokeCap=StrokeCap.round;
-    canvas.drawPoints(PointMode.points, _minutePoints, minutePointPaint);
+    Paint tickPaint = Paint()..color=this.tickColor..strokeWidth=tickWidth..strokeCap=StrokeCap.round;
+    canvas.drawPoints(PointMode.points, ticks, tickPaint);
 
-    Paint minuteBigPointPaint = Paint()..color=this.minutePointColor..strokeWidth=bigPointWidth..strokeCap=StrokeCap.round;
-    canvas.drawPoints(PointMode.points, _minuteBigPoints, minuteBigPointPaint);
+    Paint bigTickPaint = Paint()..color=this.tickColor..strokeWidth=bigTickWidth..strokeCap=StrokeCap.round;
+    canvas.drawPoints(PointMode.points, bigTicks, bigTickPaint);
   }
-  /// 绘制小时数字（1 - 12）
+
+  /// draw number（1 - 12）
   double _paintHourText(Canvas canvas, double radius, double fontSize) {
     double maxTextHeight = 0;
     for (var i = 0; i < 12; i++) {
@@ -142,7 +155,8 @@ class ClockPainter extends CustomPainter {
     }
     return maxTextHeight;
   }
-  /// 绘制时针
+
+  /// draw hour hand
   void _paintHourHand(Canvas canvas, double radius, double strokeWidth) {
     double angle = _datetime.hour % 12 + _datetime.minute / 60.0 - 3;
     Offset handOffset = Offset(cos(getRadians(angle * 30)) * radius, sin(getRadians(angle * 30)) * radius);
@@ -150,7 +164,7 @@ class ClockPainter extends CustomPainter {
     canvas.drawLine(Offset(0, 0), handOffset, hourHandPaint);
   }
 
-  /// 绘制分针
+  /// draw minute hand
   void _paintMinuteHand(Canvas canvas, double radius, double strokeWidth) {
     double angle = _datetime.minute - 15.0;
     Offset handOffset = Offset(cos(getRadians(angle * 6.0)) * radius, sin(getRadians(angle * 6.0)) * radius);
@@ -158,7 +172,7 @@ class ClockPainter extends CustomPainter {
     canvas.drawLine(Offset(0, 0), handOffset, hourHandPaint);
   }
 
-  /// 绘制秒针
+  /// draw second hand
   void _paintSecondHand(Canvas canvas, double radius, double strokeWidth) {
     double angle = _datetime.second - 15.0;
     Offset handOffset = Offset(cos(getRadians(angle * 6.0)) * radius, sin(getRadians(angle * 6.0)) * radius);
@@ -171,12 +185,19 @@ class ClockPainter extends CustomPainter {
     return _datetime != oldDelegate._datetime
         || dialPlateColor != oldDelegate.dialPlateColor
         || hourHandColor != oldDelegate.hourHandColor
+        || minuteHandColor != oldDelegate.minuteHandColor
+        || secondHandColor != oldDelegate.secondHandColor
+        || tickColor != oldDelegate.tickColor
         || numberColor != oldDelegate.numberColor
         || borderColor != oldDelegate.borderColor
-        || minutePointColor != oldDelegate.minutePointColor
         || centerPointColor != oldDelegate.centerPointColor
+        || showBorder != oldDelegate.showBorder
+        || showTicks != oldDelegate.showTicks
         || showMinuteHand != oldDelegate.showMinuteHand
-        || showSecondHand != oldDelegate.showSecondHand;
+        || showSecondHand != oldDelegate.showSecondHand
+        || showNumber != oldDelegate.showNumber
+        || hourNumbers != oldDelegate.hourNumbers
+        || _borderWidth != oldDelegate._borderWidth;
   }
 
   static double getRadians(double angle) {

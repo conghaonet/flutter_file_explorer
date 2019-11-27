@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
             Container(
               width: double.infinity,
-              height: 200,
+              height: 300,
               color: Colors.grey,
               child: Padding(
                 padding: EdgeInsets.zero,
@@ -56,12 +56,12 @@ class _SplashPageState extends State<SplashPage> {
                   painter: ClockPainter(
                     DateTime.now(),
                     dialPlateColor: Colors.white,
+                    borderColor: Colors.blue,
                     hourHandColor: Colors.blue[900],
                     minuteHandColor: Colors.purple[900],
                     secondHandColor: Colors.red[900],
+                    tickColor: Colors.purple[900],
                     numberColor: Colors.red[900],
-                    borderColor: Colors.yellow[900],
-                    minutePointColor: Colors.purple[900],
                     centerPointColor: Colors.green[900],
 //                    showBorder: false,
 //                    showTicks: false,
@@ -69,6 +69,7 @@ class _SplashPageState extends State<SplashPage> {
 //                    showSecondHand: false,
 //                    showNumber: false,
 //                    hourNumbers: hourNumbers,
+//                    borderWidth: 50,
                   ),
 //                child: Container(
 //                  width: 350,
@@ -79,13 +80,16 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
             ),
-            CustomPaint(
-              painter: ClockPainter2(DateTime.now(),
-                  numberColor: Colors.black,
-                  handColor: Colors.black,
-                  borderColor: Colors.black,
-                  radius: 150),
-              size: Size(150.0 * 2, 150.0 * 2),
+            Container(
+              color: Colors.blue[200],
+              child: CustomPaint(
+                painter: ClockPainter2(DateTime.now(),
+                    numberColor: Colors.black,
+                    handColor: Colors.black,
+                    borderColor: Colors.black,
+                    radius: 150),
+                size: Size(150.0 * 2, 150.0 * 2),
+              ),
             ),
           ],
         ),
