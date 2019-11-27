@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
             Container(
               width: double.infinity,
-              height: 250,
+              height: 200,
               color: Colors.grey,
               child: Padding(
                 padding: EdgeInsets.zero,

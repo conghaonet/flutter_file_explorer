@@ -78,7 +78,7 @@ class ClockPainter extends CustomPainter {
     }
 
     // setup minute point
-    final double minutePointWidth = circumference / 180;
+    final double minutePointWidth = circumference / 200;
     final double minuteBigPointWidth = circumference / 120;
     final double minutePointRadius = (radius - borderWidth - minuteBigPointWidth);
     if(showTicks) _paintMinutePoints(canvas, minutePointRadius, minutePointWidth, minuteBigPointWidth);
