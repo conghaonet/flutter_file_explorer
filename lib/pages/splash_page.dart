@@ -7,8 +7,10 @@ import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
 import 'package:flutter_file_explorer/utils/theme_util.dart';
-import 'package:flutter_file_explorer/widgets/analog_clock.dart';
-import 'package:flutter_file_explorer/widgets/analog_clock_painter.dart';
+import 'package:analog_clock/analog_clock.dart';
+import 'package:analog_clock/analog_clock_painter.dart';
+//import 'package:flutter_file_explorer/widgets/analog_clock.dart';
+//import 'package:flutter_file_explorer/widgets/analog_clock_painter.dart';
 
 class SplashPage extends StatefulWidget {
   static const navigationName = '/splash';
