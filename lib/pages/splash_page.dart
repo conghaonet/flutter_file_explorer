@@ -7,10 +7,7 @@ import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
 import 'package:flutter_file_explorer/utils/theme_util.dart';
-import 'package:analog_clock/analog_clock.dart';
-import 'package:analog_clock/analog_clock_painter.dart';
-//import 'package:flutter_file_explorer/widgets/analog_clock.dart';
-//import 'package:flutter_file_explorer/widgets/analog_clock_painter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SplashPage extends StatefulWidget {
   static const navigationName = '/splash';
@@ -19,17 +16,17 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final List<String> hourNumbers = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-//  final List<String> hourNumbers = ['', '', '3', '', '', '6', '', '', '9', '', '', '12'];
-  Timer _timer;
-  DateTime _dateTime = DateTime.now();
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      setState(() {
-      });
-    });
+
   }
 
   @override
@@ -49,77 +46,30 @@ class _SplashPageState extends State<SplashPage> {
                 S.current.appTitle,
               ),
             ),
-            Container(
-              width: double.infinity,
-              height: 300,
-              color: Colors.grey,
-              child: Padding(
-                padding: EdgeInsets.zero,
-                child: CustomPaint(
-                  painter: AnalogClockPainter(
-                    DateTime.now(),
-                    dialPlateColor: Colors.white,
-                    borderColor: Colors.blue,
-                    hourHandColor: Colors.blue[900],
-                    minuteHandColor: Colors.purple[900],
-                    secondHandColor: Colors.red[900],
-                    tickColor: Colors.purple[900],
-                    numberColor: Colors.red[900],
-                    centerPointColor: Colors.green[900],
-//                    showBorder: false,
-//                    showTicks: false,
-//                    showMinuteHand: false,
-//                    showSecondHand: false,
-//                    showNumber: false,
-//                    hourNumbers: hourNumbers,
-//                    borderWidth: 50,
-                  ),
-//                child: Container(
-//                  width: 350,
-//                  height: 350,
-//                  child: Text('Clock'),
-//                ),
-//                size: Size(200.0, 200.0),
-                ),
+            InkWell(
+              onTap: () async {
+                try {
+                  GoogleSignInAccount account = await _googleSignIn.signIn();
+                  print(account?.email);
+                } catch (error) {
+                  print(error);
+                }
+              },
+              child: Text('Google singin',
               ),
             ),
-            Container(
-//              color: Colors.blue[200],
-//              width: 300,
-//              height: 200,
-              child: AnalogClock(
-                width: 200,
-                height: 200,
-                dateTime: DateTime(2019, 1, 1, 18, 22, 45),
-                isLive: true,
-                dialPlateColor: Colors.white,
-                borderColor: Colors.blue,
-                hourHandColor: Colors.blue[900],
-                minuteHandColor: Colors.purple[900],
-                secondHandColor: Colors.red[900],
-                tickColor: Colors.purple[900],
-                numberColor: Colors.red[900],
-                centerPointColor: Colors.green[900],
-//                    showBorder: false,
-//                    showTicks: false,
-//                    showMinuteHand: false,
-//                    showSecondHand: false,
-//                    showNumber: false,
-//                    hourNumbers: hourNumbers,
-//                    borderWidth: 50,
+            InkWell(
+              onTap: () async {
+                try {
+                  GoogleSignInAccount account = await _googleSignIn.signOut();
+                  print(account?.email);
+                } catch (error) {
+                  print(error);
+                }
+              },
+              child: Text('Google signout',
               ),
             ),
-//            Container(
-//              color: Colors.blue[200],
-//              child: CustomPaint(
-//                painter: ClockPainter2(DateTime.now(),
-//                    numberColor: Colors.black,
-//                    handColor: Colors.black,
-//                    borderColor: Colors.black,
-//                    radius: 150),
-//                size: Size(150.0 * 2, 150.0 * 2),
-//              ),
-//            ),
           ],
         ),
       ),
@@ -127,7 +77,6 @@ class _SplashPageState extends State<SplashPage> {
   }
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
   }
 }
