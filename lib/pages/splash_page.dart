@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_file_explorer/generated/i18n.dart';
 import 'package:flutter_file_explorer/pages/home_page.dart';
 import 'package:flutter_file_explorer/utils/sp_util.dart';
 import 'package:flutter_file_explorer/utils/theme_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SplashPage extends StatefulWidget {
@@ -22,6 +24,7 @@ class _SplashPageState extends State<SplashPage> {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -37,8 +40,8 @@ class _SplashPageState extends State<SplashPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            InkWell(
-              onTap: () {
+            RaisedButton(
+              onPressed: () {
                 SpUtil.getThemeMode();
                 Navigator.pushReplacementNamed(context, HomePage.navigationName);
               },
@@ -46,11 +49,11 @@ class _SplashPageState extends State<SplashPage> {
                 S.current.appTitle,
               ),
             ),
-            InkWell(
-              onTap: () async {
+            RaisedButton(
+              onPressed: () async {
                 try {
                   GoogleSignInAccount account = await _googleSignIn.signIn();
-                  print(account?.email);
+                  Fluttertoast.showToast(msg: account?.email ?? '登陆失败！');
                 } catch (error) {
                   print(error);
                 }
@@ -58,17 +61,33 @@ class _SplashPageState extends State<SplashPage> {
               child: Text('Google singin',
               ),
             ),
-            InkWell(
-              onTap: () async {
+            RaisedButton(
+              onPressed: () async {
                 try {
-                  GoogleSignInAccount account = await _googleSignIn.signOut();
-                  print(account?.email);
+                  await _googleSignIn.signOut();
+                  Fluttertoast.showToast(msg: 'Logout');
                 } catch (error) {
                   print(error);
                 }
               },
               child: Text('Google signout',
               ),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+                final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+                final AuthCredential credential = GoogleAuthProvider.getCredential(
+                  accessToken: googleAuth.accessToken,
+                  idToken: googleAuth.idToken,
+                );
+
+                final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+                Fluttertoast.showToast(msg: "signed in " + user.displayName);
+                print("signed in " + user.displayName);
+              },
+              child: Text('FirebaseAuth',),
             ),
           ],
         ),
